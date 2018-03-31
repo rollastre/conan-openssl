@@ -141,10 +141,17 @@ class OpenSSLConan(ConanFile):
                 target = "%slinux-generic32" % target_prefix
             elif self.settings.arch == "x86_64":
                 target = "%slinux-x86_64" % target_prefix
-            elif "armv7" in str(self.settings.arch):
-                target = "%slinux-armv4" % target_prefix
             elif self.settings.arch == "armv8":  # Thanks @dashaomai!
                 target = "%slinux-aarch64" % target_prefix
+            elif str(self.settings.arch) in ("ppc64le", "ppc64", "mips64", "sparcv9"):
+                target = "linux-%s" % str(self.settings.arch)
+            elif "arm" in self.settings.arch:
+                target = "linux-armv4"
+            elif "mips" == self.settings.arch:
+                target = "linux-mips32"
+            else:
+                raise Exception("Unsupported arch for Linux")
+
         elif self.settings.os == "Android":
             if "armv7" in self.settings.arch:
                 target = "android-armv7"
@@ -155,7 +162,7 @@ class OpenSSLConan(ConanFile):
             elif self.settings.arch == "mips":
                 target = "android-mips"
             else:
-                raise Exception("Unsupported arch for android")
+                raise Exception("Unsupported arch for Android")
         elif self.settings.os == "SunOS":
             if self.settings.compiler in ["apple-clang", "clang", "gcc"]:
                 suffix = "-gcc"
@@ -177,7 +184,6 @@ class OpenSSLConan(ConanFile):
 
         elif self.settings.os == "FreeBSD":
             target = "%sBSD-%s" % (target_prefix, self.settings.arch)
-
         else:
             raise Exception("Unsupported operating system: %s" % self.settings.os)
 
