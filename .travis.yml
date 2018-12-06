@@ -7,7 +7,7 @@ services:
 env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8
 install:
   - pip install conan --upgrade
-  - pip install conan_package_tools
+  - pip install conan-package-tools
 before_script:
   - conan user
 script:
