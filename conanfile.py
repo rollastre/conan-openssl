@@ -6,5 +6,5 @@ from conans import ConanFile
 class AliasConanfile(ConanFile):
     name = "OpenSSL"
     version = "1.0.2"
-    _patch = 'n'
+    _patch = 'q'
     alias = "{}/{}{}@conan/stable".format(name, version, _patch)
