@@ -1,16 +1,24 @@
 [![Build Status](https://travis-ci.org/conan-community/conan-openssl.svg?branch=master)](https://travis-ci.org/conan-community/conan-openssl)
 
-# conan-openssl
+# Conan OpenSSL
 
-[Conan.io](https://conan.io) package for OpenSSL library
+[Conan.io](https://conan.io) package **ALIAS** for OpenSSL library
 
 The packages generated with this **conanfile** can be found in [Conan Center](https://bintray.com/conan-community/conan/OpenSSL%3Aconan/1.0.2%3Astable).
+
+## ALIAS
+
+This package is an alias for that latest OpenSSL 1.0.2 pacth version. The current target is **1.0.2q**
 
 ## Build packages
 
 Download conan client from [Conan.io](https://conan.io) and run:
 
     $ python build.py
+
+## Export alias
+
+    $ conan alias OpenSSL/1.0.2@conan/stable OpenSSL/1.0.2q@conan/stable
 
 ## Upload packages to server
 
