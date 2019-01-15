@@ -149,6 +149,8 @@ class OpenSSLConan(ConanFile):
                 target = "linux-armv4"
             elif "mips" == self.settings.arch:
                 target = "linux-mips32"
+            elif str(self.settings.arch) == "e2k":
+                target = "%slinux-generic64" % target_prefix
             else:
                 raise Exception("Unsupported arch for Linux")
 
