@@ -8,13 +8,13 @@ from conans.model.version import Version
 
 class OpenSSLConan(ConanFile):
     name = "OpenSSL"
-    version = "1.0.2q"
+    version = "1.0.1h"
     settings = "os", "compiler", "arch", "build_type"
     url = "http://github.com/lasote/conan-openssl"
     license = "The current OpenSSL licence is an 'Apache style' license: https://www.openssl.org/source/license.html"
     description = "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured " \
                   "toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols"
-    # https://github.com/openssl/openssl/blob/OpenSSL_1_0_2l/INSTALL
+    # https://github.com/openssl/openssl/blob/OpenSSL_1_0_1h/INSTALL
     options = {"no_threads": [True, False],
                "no_zlib": [True, False],
                "shared": [True, False],
@@ -39,7 +39,7 @@ class OpenSSLConan(ConanFile):
 
     # When a new version is available they move the tar.gz to old/ location
     source_tgz = "https://www.openssl.org/source/openssl-%s.tar.gz" % version
-    source_tgz_old = "https://www.openssl.org/source/old/1.0.2/openssl-%s.tar.gz" % version
+    source_tgz_old = "https://www.openssl.org/source/old/1.0.1/openssl-%s.tar.gz" % version
 
     def build_requirements(self):
         # useful for example for conditional build_requires
@@ -55,8 +55,8 @@ class OpenSSLConan(ConanFile):
         except:
             tools.download(self.source_tgz, "openssl.tar.gz")
         tools.unzip("openssl.tar.gz")
-        tools.check_sha256("openssl.tar.gz",
-                           "5744cfcbcec2b1b48629f7354203bc1e5e9b5466998bbccc5b5fcde3b18eb684")
+        tools.check_sha1("openssl.tar.gz",
+                           "b2239599c8bf8f7fc48590a55205c26abe560bf8")
         os.unlink("openssl.tar.gz")
 
     def configure(self):
