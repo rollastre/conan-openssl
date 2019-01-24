@@ -97,8 +97,8 @@ class OpenSSLConan(ConanFile):
             self.output.info("=====> Options: %s" % config_options_string)
         if self.settings.os == "Android" and self.settings.compiler == "clang":
             tools.replace_in_file("./openssl-%s/Configure" % self.version, 
-                                '''"android-armv7","gcc:-march=armv7-a -mandroid -I\$(ANDROID_DEV)/include -B\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",''',
-                                '''"android-armv7","clang:$ENV{'CFLAGS'} -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl $ENV{'LDFLAGS'}:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",''')
+                                '''"android-armv7","gcc:-march=armv7-a -mandroid -I\\$(ANDROID_DEV)/include -B\\$(ANDROID_DEV)/lib -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\\$(SHLIB_MAJOR).\\$(SHLIB_MINOR)",''',
+                                '''"android-armv7","clang:$ENV{'CFLAGS'} -O3 -fomit-frame-pointer -Wall::-D_REENTRANT::-ldl $ENV{'LDFLAGS'}:BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${armv4_asm}:dlfcn:linux-shared:-fPIC::.so.\\$(SHLIB_MAJOR).\\$(SHLIB_MINOR)",''')
 
         for option_name in self.options.values.fields:
             activated = getattr(self.options, option_name)
