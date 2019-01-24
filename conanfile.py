@@ -36,6 +36,7 @@ class OpenSSLConan(ConanFile):
                "no_rsa": [True, False],
                "no_sha": [True, False]}
     default_options = "=False\n".join(options.keys()) + "=False"
+    exports = ['vs2015.patch']
 
     # When a new version is available they move the tar.gz to old/ location
     source_tgz = "https://www.openssl.org/source/openssl-%s.tar.gz" % version
@@ -58,6 +59,7 @@ class OpenSSLConan(ConanFile):
         tools.check_sha1("openssl.tar.gz",
                            "b2239599c8bf8f7fc48590a55205c26abe560bf8")
         os.unlink("openssl.tar.gz")
+        tools.patch(base_path="openssl-%s" % self.version, patch_file="vs2015.patch", strip=1)
 
     def configure(self):
         if client_version < Version("1.0.0"):
