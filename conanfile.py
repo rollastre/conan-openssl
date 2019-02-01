@@ -43,8 +43,10 @@ class OpenSSLConan(ConanFile):
 
     def build_requirements(self):
         # useful for example for conditional build_requires
-        if self.settings.compiler == "Visual Studio":
-            self.build_requires("strawberryperl/5.26.0@conan/stable")
+        # https://github.com/conan-community/community/issues/28
+        if self.settings.compiler == "Visual Studio" or \
+           (os.name == "nt" and tools.cross_building(self.settings)):
+            self.build_requires("strawberryperl/5.28.1.1@conan/stable")
             if not self.options.no_asm and self.settings.arch == "x86":
                 self.build_requires("nasm/2.13.01@conan/stable")
 
@@ -138,10 +140,8 @@ class OpenSSLConan(ConanFile):
         target_prefix = ""
         if self.settings.build_type == "Debug":
             config_options_string = " no-asm" + config_options_string
-            extra_flags += " -O0"
+            extra_flags += self._debug_extra_flags()
             target_prefix = "debug-"
-            if self.settings.compiler in ["apple-clang", "clang", "gcc"]:
-                extra_flags += " -g3 -fno-omit-frame-pointer -fno-inline-functions"
 
         if self.settings.os == "Linux":
             if self.settings.arch == "x86":
@@ -208,21 +208,24 @@ class OpenSSLConan(ConanFile):
         self.run_in_src("make", show_output=True)
 
     def ios_build(self, config_options_string):
-        def find_sysroot(sdk_name):
-            return tools.XCRun(self.settings, sdk_name).sdk_path
-
-        def find_cc(settings, sdk_name=None):
-            return tools.XCRun(settings, sdk_name).cc
-
-        command = "./Configure iphoneos-cross %s" % config_options_string
+        extra_flags = self._debug_extra_flags() if self.settings.build_type == "Debug" else ""
+        command = "./Configure iphoneos-cross %s %s" % (config_options_string, extra_flags)
 
         sdk = tools.apple_sdk_name(self.settings)
-        sysroot = find_sysroot(sdk)
-        cc = find_cc(self.settings, sdk)
+        sysroot = tools.XCRun(self.settings, sdk).sdk_path
+        cc = tools.XCRun(self.settings, sdk).cc
 
         cc += " -arch %s" % tools.to_apple_arch(self.settings.arch)
         if not str(self.settings.arch).startswith("arm"):
             cc += " -DOPENSSL_NO_ASM"
+
+        try:
+            cc += " -mios-version-min=%s" % self.settings.os.version
+            self.output.info("iOS deployment target: %s" % self.settings.os.version)
+        except:
+            pass
+
+        cc += " -fembed-bitcode"
 
         os.environ["CROSS_SDK"] = os.path.basename(sysroot)
         os.environ["CROSS_TOP"] = os.path.dirname(os.path.dirname(sysroot))
@@ -239,11 +242,15 @@ class OpenSSLConan(ConanFile):
         self.run_in_src("make")
 
     def osx_build(self, config_options_string):
-        m32_suff = " -m32" if self.settings.arch == "x86" else ""
+        extra_flags = " -m32" if self.settings.arch == "x86" else ""
+
+        if self.settings.build_type == "Debug":
+            extra_flags += self._debug_extra_flags()
+
         if self.settings.arch == "x86_64":
-            command = "./Configure darwin64-x86_64-cc %s" % config_options_string
+            command = "./Configure darwin64-x86_64-cc %s %s" % (config_options_string, extra_flags)
         else:
-            command = "./config %s %s" % (config_options_string, m32_suff)
+            command = "./config %s %s" % (config_options_string, extra_flags)
 
         self.run_in_src(command)
         # REPLACE -install_name FOR FOLLOW THE CONAN RULES,
@@ -363,6 +370,12 @@ class OpenSSLConan(ConanFile):
         current_libeay = os.path.join(lib_path, "libeay32%s.lib" % suffix)
         os.rename(current_ssleay, os.path.join(lib_path, "ssleay32.lib"))
         os.rename(current_libeay, os.path.join(lib_path, "libeay32.lib"))
+
+    def _debug_extra_flags(self):
+        extra_flags = " -O0"
+        if self.settings.compiler in ["apple-clang", "clang", "gcc"]:
+            extra_flags += " -g3 -fno-omit-frame-pointer -fno-inline-functions"
+        return extra_flags
 
     def package_info(self):
         if self.settings.compiler == "Visual Studio":
