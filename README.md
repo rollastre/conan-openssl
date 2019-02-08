@@ -1,5 +1,5 @@
 [![Download](https://api.bintray.com/packages/conan-community/conan/OpenSSL%3Aconan/images/download.svg) ](https://bintray.com/conan-community/conan/OpenSSL%3Aconan/_latestVersion)
-[![Build Status Travis](https://travis-ci.org/conan-community/conan-OpenSSL.svg)](https://travis-ci.org/conan-community/conan-OpenSSL)
+[![Build Status Travis](https://travis-ci.org/conan-community/conan-openssl.svg)](https://travis-ci.org/conan-community/conan-openssl)
 
 ## Conan package recipe for *OpenSSL*
 
