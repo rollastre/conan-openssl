@@ -1,30 +1,21 @@
-[![Build Status](https://travis-ci.org/conan-community/conan-openssl.svg?branch=master)](https://travis-ci.org/conan-community/conan-openssl)
+[![Download](https://api.bintray.com/packages/conan-community/conan/OpenSSL%3Aconan/images/download.svg) ](https://bintray.com/conan-community/conan/OpenSSL%3Aconan/_latestVersion)
+[![Build Status Travis](https://travis-ci.org/conan-community/conan-OpenSSL.svg)](https://travis-ci.org/conan-community/conan-OpenSSL)
 
-# Conan OpenSSL
+## Conan package recipe for *OpenSSL*
 
-[Conan.io](https://conan.io) package **ALIAS** for OpenSSL library
 
-The packages generated with this **conanfile** can be found in [Conan Center](https://bintray.com/conan-community/conan/OpenSSL%3Aconan/1.0.2%3Astable).
 
-## ALIAS
+The packages generated with this **conanfile** can be found on [Bintray](https://bintray.com/conan-community/conan/OpenSSL%3Aconan).
 
-This package is an alias for that latest OpenSSL 1.0.2 pacth version. The current target is **1.0.2q**
 
-## Build packages
+## Issues
 
-Download conan client from [Conan.io](https://conan.io) and run:
+If you wish to report an issue or make a request for a package, please do so here:
 
-    $ python build.py
+[Issues Tracker](https://github.com/conan-community/community/issues)
 
-## Export alias
 
-    $ conan alias OpenSSL/1.0.2@conan/stable OpenSSL/1.0.2q@conan/stable
-
-## Upload packages to server
-
-    $ conan upload OpenSSL/1.0.2@conan/stable
-
-## Reuse the packages
+## For Users
 
 ### Basic setup
 
@@ -37,16 +28,35 @@ If you handle multiple dependencies in your project is better to add a *conanfil
     [requires]
     OpenSSL/1.0.2@conan/stable
 
-    [options]
-    OpenSSL:shared=true # false
-    # Take a look for all available options in conanfile.py
-
     [generators]
     txt
-    cmake
 
-Complete the installation of requirements for your project running:</small></span>
+Complete the installation of requirements for your project running:
 
-    conan install .
+    $ mkdir build && cd build && conan install ..
 
-Project setup installs the library (and all his dependencies) and generates the files *conanbuildinfo.txt* and *conanbuildinfo.cmake* with all the paths and variables that you need to link with your dependencies.
+Note: It is recommended that you run conan install from a build directory and not the root of the project directory.  This is because conan generates *conanbuildinfo* files specific to a single build configuration which by default comes from an autodetected default profile located in ~/.conan/profiles/default .  If you pass different build configuration options to conan install, it will generate different *conanbuildinfo* files.  Thus, they should not be added to the root of the project, nor committed to git.
+
+
+## Build and package
+
+The following command both runs all the steps of the conan file, and publishes the package to the local system cache.  This includes downloading dependencies from "build_requires" and "requires" , and then running the build() method.
+
+    $ conan create . conan/stable
+
+
+
+
+## Add Remote
+
+Conan Community has its own Bintray repository, however, we are working to distribute all package in the Conan Center:
+
+    $ conan remote add conan-center "https://conan.bintray.com"
+
+
+## Conan Recipe License
+
+NOTE: The conan recipe license applies only to the files of this recipe, which can be used to build and package OpenSSL.
+It does *not* in any way apply or is related to the actual software being packaged.
+
+[MIT](LICENSE)
